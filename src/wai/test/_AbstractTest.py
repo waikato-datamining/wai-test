@@ -33,27 +33,24 @@ class AbstractTest(TestCase, metaclass=AbstractTestMeta):
         pass
 
     @classmethod
-    @abstractmethod
-    def load_common_resources(cls) -> Optional[Tuple[Any, ...]]:
+    def common_resources(cls) -> Optional[Tuple[Any, ...]]:
         """
         Loads the common resources for all tests in this class.
+        By default there are no common resources.
         """
-        pass
+        return None
 
     @classmethod
-    def define_common_serialisers(cls) -> Dict[Type, Type[RegressionSerialiser]]:
+    def common_serialisers(cls) -> Optional[Dict[Type, Type[RegressionSerialiser]]]:
         """
-        Defines the common serialisers to use for regression
-        tests in this class. By default contains the basic string
-        and bytes serialisers.
+        Defines additional common serialisers to use for regression
+        tests in this class (in addition to the basic string and bytes
+        serialisers, although these can be overridden).
         """
-        return {
-            str: StringSerialiser,
-            bytes: BytesSerialiser
-        }
+        return None
 
     @classmethod
-    def define_default_arguments(cls) -> Optional[Tuple[Tuple[Any, ...], Dict[str, Any]]]:
+    def common_arguments(cls) -> Optional[Tuple[Tuple[Any, ...], Dict[str, Any]]]:
         """
         Defines the default arguments to pass to the subject on instantiation.
         By default, no arguments are passed.
@@ -85,7 +82,7 @@ class AbstractTest(TestCase, metaclass=AbstractTestMeta):
             return self.instantiate_subject(*subject_args[0], **subject_args[1])
 
         # If not, try using the default arguments
-        subject_args = self.define_default_arguments()
+        subject_args = self.common_arguments()
 
         # If there are default arguments, use them
         if subject_args is not None:
@@ -189,8 +186,16 @@ class AbstractTest(TestCase, metaclass=AbstractTestMeta):
 
         :return:    The map from type to serialiser.
         """
-        # Get the common serialisers for this class
-        serialisers = self.define_common_serialisers()
+        # Define the basic serialisers
+        serialisers = {
+            str: StringSerialiser,
+            bytes: BytesSerialiser
+        }
+
+        # Add the common serialisers for this class
+        common_serialisers = self.common_serialisers()
+        if common_serialisers is not None:
+            serialisers.update(common_serialisers)
 
         # Override with any test-specific serialisers
         serialisers.update(get_serialisers(self.get_test_method()))

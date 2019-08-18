@@ -22,8 +22,11 @@ def Test(method):
     @functools.wraps(method)
     def when_called(test: AbstractTest):
         subject = test.subject()
-        resources = test.load_common_resources()
+        resources = test.common_resources()
 
-        return method(test, subject, *resources)
+        if resources is not None:
+            return method(test, subject, *resources)
+        else:
+            return method(test, subject)
 
     return when_called
