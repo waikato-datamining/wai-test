@@ -52,6 +52,14 @@ class AbstractTest(TestCase, metaclass=AbstractTestMeta):
             bytes: BytesSerialiser
         }
 
+    @classmethod
+    def define_default_arguments(cls) -> Optional[Tuple[Tuple[Any, ...], Dict[str, Any]]]:
+        """
+        Defines the default arguments to pass to the subject on instantiation.
+        By default, no arguments are passed.
+        """
+        return None
+
     def setUp(self) -> None:
         # Get the method being tested
         test_method = self.get_test_method()
@@ -69,10 +77,17 @@ class AbstractTest(TestCase, metaclass=AbstractTestMeta):
         return cls.subject_type()(*args, **kwargs)
 
     def subject(self) -> Any:
-        # Get the arguments to use to create the test subject
+        # Get the arguments to use to create the test subject from the test method
         subject_args = get_subject_args(self.get_test_method())
 
         # If there are arguments, use them
+        if subject_args is not None:
+            return self.instantiate_subject(*subject_args[0], **subject_args[1])
+
+        # If not, try using the default arguments
+        subject_args = self.define_default_arguments()
+
+        # If there are default arguments, use them
         if subject_args is not None:
             return self.instantiate_subject(*subject_args[0], **subject_args[1])
 
