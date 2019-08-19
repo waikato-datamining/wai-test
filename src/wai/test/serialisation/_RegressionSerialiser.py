@@ -121,3 +121,18 @@ class RegressionSerialiser(Generic[ResultType]):
         :return:        The regression result stored in the file.
         """
         pass
+
+    @classmethod
+    def compare(cls, result: ResultType, reference: ResultType) -> bool:
+        """
+        Compares the result to the reference value for equality. Can be
+        overridden to define a different sense of equality other than the
+        standard == result.
+
+        :param result:      The result of this regression test.
+        :param reference:   The reference result from disk.
+        :return:            True if the results are "equal",
+                            False if not. i.e. the result of the regression
+                            test.
+        """
+        return result == reference

@@ -145,7 +145,11 @@ class AbstractTest(TestCase, metaclass=AbstractTestMeta):
             # Otherwise load and check the saved result
             else:
                 reference = serialiser.load(filename)
-                self.assertEqual(result, reference)
+
+                # Use the serialiser's notion of equality
+                self.assertTrue(serialiser.compare(result, reference),
+                                "Result did not equal regression reference under serialiser " +
+                                serialiser.__name__)
 
     @classmethod
     def get_regression_root_path(cls) -> str:
