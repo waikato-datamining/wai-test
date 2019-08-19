@@ -1,6 +1,6 @@
 import os
 from abc import abstractmethod
-from typing import IO, Generic, TypeVar, AnyStr
+from typing import IO, Generic, TypeVar, AnyStr, Optional
 
 # The types of the regression result and the disk type
 ResultType = TypeVar("ResultType")
@@ -123,7 +123,7 @@ class RegressionSerialiser(Generic[ResultType]):
         pass
 
     @classmethod
-    def compare(cls, result: ResultType, reference: ResultType) -> bool:
+    def compare(cls, result: ResultType, reference: ResultType) -> Optional[str]:
         """
         Compares the result to the reference value for equality. Can be
         overridden to define a different sense of equality other than the
@@ -131,8 +131,7 @@ class RegressionSerialiser(Generic[ResultType]):
 
         :param result:      The result of this regression test.
         :param reference:   The reference result from disk.
-        :return:            True if the results are "equal",
-                            False if not. i.e. the result of the regression
-                            test.
+        :return:            A message describing why the comparison failed,
+                            or None if it passed.
         """
-        return result == reference
+        return "result does not equal reference" if result != reference else None

@@ -1,4 +1,4 @@
-from typing import IO
+from typing import IO, Optional
 
 from ._RegressionSerialiser import RegressionSerialiser
 
@@ -22,3 +22,11 @@ class StringSerialiser(RegressionSerialiser[str]):
     @classmethod
     def deserialise(cls, file: IO[str]) -> str:
         return file.read()
+
+    @classmethod
+    def compare(cls, result: str, reference: str) -> Optional[str]:
+        if super().compare(result, reference) is not None:
+            return "Result:\n" + \
+                result + "\n" + \
+                "Reference:\n" + \
+                reference
