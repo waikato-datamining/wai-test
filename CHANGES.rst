@@ -5,6 +5,7 @@ Changelog
 ------------------
 
 - project name uses underscores now
+- removed deprecated `namespace_packages` parameter
 
 
 0.0.3 (2019-08-19)

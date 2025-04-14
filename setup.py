@@ -30,9 +30,6 @@ setup(
         '': 'src'
     },
     packages=find_namespace_packages(where="src"),
-    namespace_packages=[
-        "wai"
-    ],
     version="0.0.4",
     author='Corey Sterling',
     author_email='coreytsterling@gmail.com',
