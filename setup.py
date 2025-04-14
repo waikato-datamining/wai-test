@@ -13,7 +13,7 @@ def _read(f) -> bytes:
 
 
 setup(
-    name="wai.test",
+    name="wai_test",
     description="Python library for unit tests.",
     long_description=(
         _read('DESCRIPTION.rst') + b'\n' +
@@ -33,7 +33,7 @@ setup(
     namespace_packages=[
         "wai"
     ],
-    version="0.0.3",
+    version="0.0.4",
     author='Corey Sterling',
     author_email='coreytsterling@gmail.com',
     install_requires=[],
